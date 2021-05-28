@@ -102,6 +102,10 @@ namespace SnakeLadderGame
                         Console.WriteLine(" PLAYER ONE TURN");
                         player = PlayGame(playerOne, turn); //passing player One's position and recording back new position 
                         turn = 0; //switch to player two
+                    if(player > playerOne) //checking for ladder if true play again
+                    {
+                        turn = 1;
+                    }
                         playerOne = player; // recording player One's position
                 }
                 if (playerOne == WIN_POSITION) // checking win condition before giving turn to player two
@@ -115,6 +119,10 @@ namespace SnakeLadderGame
                     Console.WriteLine(" PLAYER TWO TURN");
                    player = PlayGame(playerTwo, turn);//passing player Two's position and recording back new position
                     turn = 1; //switch back to player One
+                    if (player > playerTwo) //checking for ladder if true play again
+                    {
+                        turn = 0;
+                    }
                     playerTwo = player; // recording player Two's position
                 }
                 if (playerTwo == WIN_POSITION) //checking for win condition before giving turn to player One
