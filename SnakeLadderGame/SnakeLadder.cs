@@ -6,21 +6,22 @@ namespace SnakeLadderGame
 {
     class SnakeLadder
     {
-        public void Start()
+        public int PlayGame(int playerPosition,int turn)
         {
-            //implementing single player start at 0.
-            //variables
-            int position;
-            int playerOne =3;    //initialize player
-            int checkwin;
-            Console.WriteLine($"player One position is {playerOne}");
-            while( playerOne <= 100) //loop until playerOne reaches 100
+            int checkwin; //for checking win
+            int position; // position generated randomly
+            while (playerPosition != WIN_POSITION ) //loop until PlayerOne or PlayerTwo reaches win position
             {
                 //check for win condition
-                checkwin = CheckWin(playerOne);
-                if (checkwin == 1) //player has reached exact 100th position
+                checkwin = CheckWin(playerPosition);
+                if (checkwin == 1 && turn == 1) //player One has reached exact 100th position
                 {
-                    Console.WriteLine($"playerOne wins!!");// display win message
+                    Console.WriteLine($"player One wins!!");// display win message
+                    break; //End the game
+                }
+                if(checkwin == 1 && turn == 0) //player Two has reached exact 100th position
+                {
+                    Console.WriteLine($"player Two wins!!");// display win message
                     break; //End the game
                 }
                 if (checkwin == 2) // player reaches over hundred than do No play
@@ -31,54 +32,108 @@ namespace SnakeLadderGame
                 {
                     position = RollDie();
                 }
+
                 // No play condition
                 if (position == 0)
                 {
                     Console.WriteLine("its a no play");
-                    playerOne += position;// player get no play then remain at same place
+                    playerPosition += position;// player get no play then remain at same place
                 }
 
                 //snake condition
-                if (playerOne == 0 && position < 0) //when player is at start  
+                if (playerPosition == 0 && position < 0) //when player is at start  
                 {
                     Console.WriteLine("its a snake bite @ 0");
-                    playerOne = 0; //if player gets snake bite, player remain at same place
+                    playerPosition = 0; //if player gets snake bite, player remain at same place
                 }
-                if (playerOne > 0 && position < 0)
+                if (playerPosition > 0 && position < 0)
                 {
                     Console.WriteLine("its a snake bite");
-                    playerOne += position; //if player is at position less than 6 and gets snake bite
-                    if (playerOne < 0)
+                    playerPosition += position; //if player is at position less than 6 and gets snake bite
+                    if (playerPosition < 0)
                     {
                         //if player position is below 0
-                        playerOne = 0;
+                        playerPosition = 0;
                     }
                 }
 
                 //ladder condition
-                if (position > 0 )
+                if (position > 0)
                 {
                     Console.WriteLine("its a ladder"); //player moves forward
-                    playerOne += position;
+                    playerPosition += position;
                 }
-                if(playerOne > 100)//player position is greater than 100
+                if (playerPosition > WIN_POSITION)//player position is greater than 100
                 {
-                    playerOne -= position; // do no play
+                    playerPosition -= position; // do no play
                 }
-                Console.WriteLine($"player One rolls die and get position {playerOne}");
+                if (turn == 1) // player One's turn is over so break the loop
+                {
+                    Console.WriteLine($"Player One rolls die and gets position {playerPosition}");
+                    break;
+                }
+                if (turn == 0) // player Two's turn is over break the loop
+                {
+                    Console.WriteLine($"Player Two rolls die and get position {playerPosition}");
+                    break;
+                }
+            }
+            return playerPosition; // return player's position
+        }
+
+        //constants
+        const int WIN_POSITION = 100; //winning position
+        const int START_POSITION = 0; // starting position
+
+        public void Start()
+        {
+            //implementing single player start at 0.
+            //variables
+            int player; // record new position of both players
+            int playerOne = START_POSITION, playerTwo= START_POSITION;    //initialize players
+            Console.WriteLine($"player One position is {playerOne}"); //player 1 -initial position is 0
+            Console.WriteLine($"player Two position is {playerTwo}"); //player 2 -initial position is 0
+            //Now to make turn for player one and player two creating an infinite loop
+            int turn = 1; //to run true condition
+            while (true) //infinte condition
+            {
+                if (turn == 1) // for player One's turn
+                {
+                        Console.WriteLine(" PLAYER ONE TURN");
+                        player = PlayGame(playerOne, turn); //passing player One's position and recording back new position 
+                        turn = 0; //switch to player two
+                        playerOne = player; // recording player One's position
+                }
+                if (playerOne == WIN_POSITION) // checking win condition before giving turn to player two
+                {
+                    Console.WriteLine("~~~~~~~~PLAYER ONE WINS~~~~~~~");
+                    break; // player one wins the game
+                }
+                if (turn == 0)
+                {
+                    //playerTwo Turn
+                    Console.WriteLine(" PLAYER TWO TURN");
+                   player = PlayGame(playerTwo, turn);//passing player Two's position and recording back new position
+                    turn = 1; //switch back to player One
+                    playerTwo = player; // recording player Two's position
+                }
+                if (playerTwo == WIN_POSITION) //checking for win condition before giving turn to player One
+                {
+                    Console.WriteLine("~~~~~~~~PLAYER TWO WINS~~~~~~~");
+                    break; //player 2 wins the game
+                }
             }
         }
 
         public int CheckWin(int playerOne)
         {
-            if (playerOne == 100) //check for 100th position
+            if (playerOne == WIN_POSITION) //check for 100th position
                 return 1;
-            if (playerOne > 100) //check for over 100th position
+            if (playerOne > WIN_POSITION) //check for over 100th position
                 return 2;
             else // continue game
                 return 0;
         }
-
 
         readonly Random random = new Random();
         int diceThrown = 0;
@@ -104,13 +159,16 @@ namespace SnakeLadderGame
             int check = random.Next(1, 4);
             return check;
         }
-        //start of game 
+
+        //START OF GAME 
         public void Board()
         {
             //at the start
             Start();
             //Display dice thrown
             Console.WriteLine($"Number of Times Dice Thrown: {diceThrown}");
+
+            
         }
 
     }

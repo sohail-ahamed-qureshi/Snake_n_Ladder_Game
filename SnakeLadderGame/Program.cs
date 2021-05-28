@@ -9,6 +9,8 @@ namespace SnakeLadderGame
             Console.WriteLine("~~~~~~~~~~~~Snake and Ladder game~~~~~~~~~~");
             SnakeLadder game = new SnakeLadder();
             game.Board();
+
+
         }
     }
 }
