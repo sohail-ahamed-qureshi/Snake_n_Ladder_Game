@@ -6,7 +6,9 @@ namespace SnakeLadderGame
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to Snake n Ladder Game");
+            Console.WriteLine("~~~~~~~~~~~~Snake and Ladder game~~~~~~~~~~");
+            SnakeLadder game = new SnakeLadder();
+            game.Board();
         }
     }
 }
